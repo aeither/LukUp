@@ -15,7 +15,7 @@ import { parseUnits } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 
 // Donation constants
-const MIN_DONATION_AMOUNT = 1.0;
+const MIN_DONATION_AMOUNT = 0.001;
 const MAX_DONATION_AMOUNT = 1000;
 
 function ChatContent() {
@@ -92,7 +92,7 @@ function ChatContent() {
 	};
 
 	return (
-		<div className="flex h-screen bg-zinc-950">
+		<div className="flex h-screen w-full bg-zinc-950">
 			{/* Header */}
 			<header className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800">
 				{/* <button
@@ -108,7 +108,7 @@ function ChatContent() {
 			</header>
 
 			{/* Main Content */}
-			<main className="flex-1 pt-16 pb-0 h-screen overflow-hidden flex flex-col">
+			<main className="flex-1 pt-16 pb-0 h-screen w-full overflow-hidden flex flex-col">
 				{/* Chat messages */}
 				<div className="flex-1 overflow-y-auto p-4 space-y-6">
 					{messages.map((message) => (

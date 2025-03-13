@@ -10,7 +10,7 @@ const IPFS_GATEWAY = 'https://api.universalprofile.cloud/ipfs/';
 const RPC_ENDPOINT_MAINNET = 'https://rpc.mainnet.lukso.network';
 
 // Donation constants
-const MIN_DONATION_AMOUNT = 0.01;
+const MIN_DONATION_AMOUNT = 0.001;
 const MAX_DONATION_AMOUNT = 1000;
 
 // Profile search GraphQL query
