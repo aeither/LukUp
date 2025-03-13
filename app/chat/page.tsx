@@ -1,12 +1,9 @@
 "use client";
 
-import { useUpProvider } from "@/components/upProvider";
+import { UpProvider, useUpProvider } from "@/components/upProvider";
 import { useChat } from "@ai-sdk/react";
-import { parseUnits } from "viem";
-import { waitForTransactionReceipt } from "viem/actions";
 import {
 	Copy,
-	Menu,
 	RotateCcw,
 	SendHorizontal,
 	ThumbsDown,
@@ -14,12 +11,14 @@ import {
 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { parseUnits } from "viem";
+import { waitForTransactionReceipt } from "viem/actions";
 
 // Donation constants
 const MIN_DONATION_AMOUNT = 1.0;
 const MAX_DONATION_AMOUNT = 1000;
 
-export default function Chat() {
+function ChatContent() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const { client, accounts, walletConnected } = useUpProvider();
 
@@ -29,7 +28,6 @@ export default function Chat() {
 		handleInputChange,
 		handleSubmit,
 		isLoading,
-		addToolResult,
 	} = useChat({
 		maxSteps: 5,
 		async onToolCall({ toolCall }) {
@@ -222,5 +220,13 @@ export default function Chat() {
 				</div>
 			</main>
 		</div>
+	);
+}
+
+export default function Chat() {
+	return (
+		<UpProvider>
+			<ChatContent />
+		</UpProvider>
 	);
 }
