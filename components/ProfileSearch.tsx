@@ -162,6 +162,7 @@ export function ProfileSearch({ onSelectAddress }: SearchProps) {
           <h2 className="md:text-l font-bold text-gray-900">
             Search Profile
           </h2>
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <lukso-button
             onClick={() => setIsSearching(false)}
             variant="primary"
@@ -190,7 +191,8 @@ export function ProfileSearch({ onSelectAddress }: SearchProps) {
           {showDropdown && results.length > 0 && (
             <div className="bg-white border border-gray-200 rounded-xl shadow-lg z-10 max-w-[300px] max-h-[180px] overflow-y-auto">
               {results.map((result) => (
-                <button
+                // biome-ignore lint/a11y/useButtonType: <explanation>
+<button
                   key={result.id}
                   className="w-full px-2 py-4 text-left hover:bg-gray-100 flex items-start gap-4 border-b border-gray-100 last:border-0 transition-colors"
                   onClick={() => handleSelectProfile(result)}
@@ -208,7 +210,7 @@ export function ProfileSearch({ onSelectAddress }: SearchProps) {
                           name-color="" 
                           custom-class="" 
                           prefix="@"
-                        ></lukso-username>
+                        />
                       </div>
                     )}
                     <lukso-username 
