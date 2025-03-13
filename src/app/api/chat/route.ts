@@ -1,4 +1,4 @@
-import { tools } from "@/lib/tools";
+import { tools } from "@/src/lib/tools";
 import { groq } from "@ai-sdk/groq";
 import { streamText } from "ai";
 
@@ -7,7 +7,7 @@ export const maxDuration = 45;
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-
+  
   const result = streamText({
     model: groq("qwen-qwq-32b"),
     tools,
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
       console.log(event.toolResults);
     },
   });
-
+  
+  console.log("🚀 ~ POST ~ messages:", result)
   return result.toDataStreamResponse();
 }
