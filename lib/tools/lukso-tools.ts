@@ -1,7 +1,7 @@
-import { gql, request } from 'graphql-request';
 import { ERC725 } from '@erc725/erc725.js';
 import erc725schema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json';
 import { tool } from 'ai';
+import { gql, request } from 'graphql-request';
 import { z } from 'zod';
 
 // Constants
@@ -59,8 +59,10 @@ export const luksoTools = {
           gqlQuery,
           { id: query }
         )) as { search_profiles: Profile[] };
-
-        const results = data.map(profile => ({
+        // Limit results to prevent exceeding character limit
+        const limitedData = data.length > 10 ? data.slice(0, 10) : data;
+        
+        const results = limitedData.map(profile => ({
           id: profile.id,
           name: profile.name || null,
           fullName: profile.fullName || null,
