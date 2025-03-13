@@ -16,13 +16,12 @@
  */
 'use client';
 
-import { useCallback, useState } from 'react';
-import { request, gql } from 'graphql-request';
 import makeBlockie from 'ethereum-blockies-base64';
-import { useUpProvider } from './upProvider';
+import { gql, request } from 'graphql-request';
 import Image from 'next/image';
+import { useCallback, useState } from 'react';
+import { useUpProvider } from './upProvider';
 
-const ENVIO_TESTNET_URL = 'https://envio.lukso-testnet.universal.tech/v1/graphql';
 const ENVIO_MAINNET_URL = 'https://envio.lukso-mainnet.universal.tech/v1/graphql';
 
 const gqlQuery = gql`
@@ -61,14 +60,14 @@ type SearchProps = {
 };
 
 export function ProfileSearch({ onSelectAddress }: SearchProps) {
-  const { chainId, setIsSearching } = useUpProvider();
+  const { setIsSearching } = useUpProvider();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   
   const handleSearch = useCallback(
-    async (searchQuery: string, forceSearch: boolean = false) => {
+    async (searchQuery: string, forceSearch = false) => {
       setQuery(searchQuery);
 
       if (searchQuery.length < 3) {
@@ -84,9 +83,8 @@ export function ProfileSearch({ onSelectAddress }: SearchProps) {
 
       setLoading(true);
       try {
-        const envioUrl = chainId === 42 ? ENVIO_MAINNET_URL : ENVIO_TESTNET_URL;
         const { search_profiles: data } = (await request(
-          envioUrl,
+          ENVIO_MAINNET_URL,
           gqlQuery,
           { id: searchQuery }
         )) as { search_profiles: Profile[] };
@@ -99,7 +97,7 @@ export function ProfileSearch({ onSelectAddress }: SearchProps) {
         setLoading(false);
       }
     },
-    [chainId]
+    []
   );
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

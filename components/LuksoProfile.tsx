@@ -10,7 +10,7 @@
  * @param {string} props.address - The LUKSO Universal Profile address to fetch data from
  * 
  * @remarks
- * - Uses the LUKSO testnet RPC endpoint
+ * - Uses the LUKSO mainnet RPC endpoint
  * - Falls back to a default avatar if no profile image is found
  * - Handles loading states and error cases gracefully
  */
@@ -20,9 +20,8 @@ import erc725schema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json';
 import { useEffect, useState } from 'react';
 import { useUpProvider } from './upProvider';
 
-// Constants for the IPFS gateway and RPC endpoint for the LUKSO testnet
+// Constants for the IPFS gateway and RPC endpoint for the LUKSO mainnet
 const IPFS_GATEWAY = 'https://api.universalprofile.cloud/ipfs/';
-const RPC_ENDPOINT_TESTNET = 'https://rpc.testnet.lukso.network';
 const RPC_ENDPOINT_MAINNET = 'https://rpc.mainnet.lukso.network';
 
 interface LuksoProfileProps {
@@ -30,7 +29,7 @@ interface LuksoProfileProps {
 }
 
 export function LuksoProfile({ address }: LuksoProfileProps) {
-    const { setIsSearching, chainId } = useUpProvider();
+    const { setIsSearching } = useUpProvider();
     const [profileData, setProfileData] = useState<{
         imgUrl: string;
         fullName: string;
@@ -53,8 +52,7 @@ export function LuksoProfile({ address }: LuksoProfileProps) {
 
             try {
                 const config = { ipfsGateway: IPFS_GATEWAY };
-                const rpcEndpoint = chainId === 42 ? RPC_ENDPOINT_MAINNET : RPC_ENDPOINT_TESTNET;
-                const profile = new ERC725(erc725schema, address, rpcEndpoint, config);
+                const profile = new ERC725(erc725schema, address, RPC_ENDPOINT_MAINNET, config);
                 const fetchedData = await profile.fetchData('LSP3Profile');
 
                 if (
@@ -88,7 +86,7 @@ export function LuksoProfile({ address }: LuksoProfileProps) {
         }
 
         fetchProfileImage();
-    }, [address, chainId]);
+    }, [address]);
 
     return (
         <lukso-card
@@ -124,4 +122,4 @@ export function LuksoProfile({ address }: LuksoProfileProps) {
             </div>
         </lukso-card>
     );
-} 
+}

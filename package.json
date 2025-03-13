@@ -10,10 +10,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/groq": "^1.1.13",
     "@erc725/erc725.js": "^0.27.2",
     "@lukso/up-provider": "^0.3.2",
     "@lukso/web-components": "^1.104.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "ai": "^4.1.60",
     "class-variance-authority": "^0.7.1",
     "ethereum-blockies-base64": "^1.0.2",
     "graphql": "^16.10.0",
