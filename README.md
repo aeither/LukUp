@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/784cc6da-40ff-426b-95fd-685090ae449e" alt="Logo" width="960">
+</div>
+
 # LukUp
 
 LukUp is a modern web application for interacting with the LUKSO blockchain, allowing users to search for Universal Profiles, view profile details, and send LYX tokens via an intuitive chat interface. This project focused on creating next-generation mini dApp that extend the functionality of The Grid.
