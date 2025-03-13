@@ -1,19 +1,27 @@
 "use client";
 
+import { useUpProvider } from "@/components/upProvider";
 import { useChat } from "@ai-sdk/react";
+import { parseUnits } from "viem";
+import { waitForTransactionReceipt } from "viem/actions";
 import {
-    Copy,
-    Menu,
-    RotateCcw,
-    SendHorizontal,
-    ThumbsDown,
-    ThumbsUp,
+	Copy,
+	Menu,
+	RotateCcw,
+	SendHorizontal,
+	ThumbsDown,
+	ThumbsUp,
 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
+// Donation constants
+const MIN_DONATION_AMOUNT = 1.0;
+const MAX_DONATION_AMOUNT = 1000;
+
 export default function Chat() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { client, accounts, walletConnected } = useUpProvider();
 
 	const {
 		messages,
@@ -21,8 +29,60 @@ export default function Chat() {
 		handleInputChange,
 		handleSubmit,
 		isLoading,
+		addToolResult,
 	} = useChat({
 		maxSteps: 5,
+		async onToolCall({ toolCall }) {
+			if (toolCall.toolName === "donateLyx") {
+				try {
+					if (!client || !walletConnected || accounts.length === 0) {
+						return JSON.stringify({ 
+							error: "Wallet not connected. Please connect your UP Browser wallet first." 
+						});
+					}
+
+					const { recipientAddress, amount } = toolCall.args as { 
+						recipientAddress: string;
+						amount: number;
+					};
+
+					// Validate amount
+					if (amount < MIN_DONATION_AMOUNT || amount > MAX_DONATION_AMOUNT) {
+						return JSON.stringify({ 
+							error: `Amount must be between ${MIN_DONATION_AMOUNT} and ${MAX_DONATION_AMOUNT} LYX` 
+						});
+					}
+
+					// Validate recipient address
+					if (!recipientAddress || !recipientAddress.startsWith('0x')) {
+						return JSON.stringify({ 
+							error: "Invalid recipient address format" 
+						});
+					}
+
+					const tx = await client.sendTransaction({
+						account: accounts[0] as `0x${string}`,
+						to: recipientAddress as `0x${string}`,
+						value: parseUnits(amount.toString(), 18),
+						chain: client.chain,
+					});
+
+					// Wait for transaction confirmation
+					await waitForTransactionReceipt(client, { hash: tx });
+
+					return JSON.stringify({
+						success: true,
+						txHash: tx,
+						message: `Successfully sent ${amount} LYX to ${recipientAddress}`
+					});
+				} catch (error) {
+					console.error("Donation failed:", error);
+					return JSON.stringify({ 
+						error: "Transaction failed. Please check your wallet and try again." 
+					});
+				}
+			}
+		},
 	});
 
 	const onSubmit = async (e: FormEvent) => {

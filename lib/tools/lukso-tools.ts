@@ -9,6 +9,10 @@ const ENVIO_MAINNET_URL = 'https://envio.lukso-mainnet.universal.tech/v1/graphql
 const IPFS_GATEWAY = 'https://api.universalprofile.cloud/ipfs/';
 const RPC_ENDPOINT_MAINNET = 'https://rpc.mainnet.lukso.network';
 
+// Donation constants
+const MIN_DONATION_AMOUNT = 1.0;
+const MAX_DONATION_AMOUNT = 1000;
+
 // Profile search GraphQL query
 const gqlQuery = gql`
   query MyQuery($id: String!) {
@@ -123,5 +127,16 @@ export const luksoTools = {
         return JSON.stringify({ error: "Failed to fetch profile data" });
       }
     }
+  }),
+
+  donateLyx: tool({
+    description: "Send LYX tokens to a LUKSO Universal Profile address",
+    parameters: z.object({
+      recipientAddress: z.string().describe("Recipient's LUKSO Universal Profile address (0x...)"),
+      amount: z.number()
+        .min(MIN_DONATION_AMOUNT)
+        .max(MAX_DONATION_AMOUNT)
+        .describe(`Amount of LYX to send (${MIN_DONATION_AMOUNT}-${MAX_DONATION_AMOUNT})`)
+    })
   })
 };
